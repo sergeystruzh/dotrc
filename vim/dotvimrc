@@ -168,10 +168,6 @@ set statusline +=%1*%4v\ %*             "virtual column number
 set statusline +=%1*0x%04B\ %*          "character under cursor
 set laststatus=2
 
-" Atheros specific data types
-syn keyword cType A_CHAR A_INT8 A_UINT8 A_UCHAR A_INT16 A_UINT16 A_INT32
-syn keyword cType A_UINT32 A_INT64 A_UINT64 A_BOOL ULONG A_ULONG A_ADDR
-
 if version >= 703
 	function! BuildCustomDataTypesFromTags()
 		let list = taglist('^.*')
