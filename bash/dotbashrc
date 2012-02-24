@@ -1,0 +1,38 @@
+
+# Perforce configuration
+export P4EDITOR=vim
+export P4CLIENT=jasonyo_avatar_00
+
+# per-host custom built applications per
+export PATH=~/.$(hostname)-local/bin:$PATH
+
+unset LS_COLORS
+alias ls='ls --color=auto'
+alias psa='ps -u `whoami` -Hf'
+alias g='gvim'
+
+# disable XON/XOFF flow control
+stty -ixon
+
+function bvtags () {
+	echo "	TAGS"
+	ctags -Rb 
+	echo "	CSCOPE"
+	cscope -Rb
+}                                      
+
+function set_prompt() {
+	green=$(tput setaf 1)
+	blue=$(tput setaf 4)
+	bold=$(tput bold)
+	reset=$(tput sgr0)
+	export PS1='\[$green$bold\]\h\[$reset\]:\[$blue$bold\]\w\[$reset\]\n$ '
+}
+
+# hack to auto completion scripts
+for c in ~/.ayj/bash/bash_completion.d/*; do
+	source $c
+done
+
+set_prompt
+

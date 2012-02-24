@@ -1,0 +1,202 @@
+" Jason Young <a.young.jason@gmail.com>
+"
+" TODO update installation instructions
+" On Linux
+" 	git clone <...> ~/.vim
+" 	ln -s ~/.vim/dotvimrc ~/.vimrc
+"
+" On Windows
+" 	git clone <...> $HOME/ayjvim
+"	set runtimepath+=$HOME/ayjvim/
+"	source $HOME\ayjvim\dotvimrc
+
+" Reload configuration from .vimrc
+map <F12> :source ~/.vimrc<CR>
+
+" Toggle menu with Control-F1
+nnoremap <C-F1> :if &go=~#'m'<Bar>set go-=m<Bar>else<Bar>set go+=m<Bar>endif<CR>
+
+" Custom cursor
+highlight Cursor guifg=white guibg=steelblue
+highlight iCursor guifg=white guibg=steelblue
+set guicursor=a:ver1
+
+" TODO
+" Jump to tag in split window
+"map <C-[> :stag =expand("<cword>")<CR><CR>
+"map <C-'> :vertical stag <c-r>=expand("<cword>")<CR><CR>
+
+" Configure automatic folding
+nnoremap <silent> <Space> @=(foldlevel('.')?'za':"\<Space>")<CR>
+vnoremap <Space> zf
+set foldnestmax=1
+set foldcolumn=1
+set foldlevel=1
+set foldmethod=syntax 
+
+" emacs keybindings that are more convenient
+imap <M-BS> <ESC>dbi
+imap <M-f> <ESC>wwi
+imap <M-b> <ESC>bi
+imap <C-a> <ESC>0i
+imap <C-e> <ESC>A
+
+" Highlight current line
+set cursorline
+highlight CursorLine cterm=bold ctermbg=none ctermfg=none
+
+call pathogen#infect()
+
+" Autoselect, AddTabPages
+set guioptions=ae
+
+" Cursor can be positioned where there is no actual character
+set virtualedit=all
+
+" Search configuration
+set incsearch
+set showmatch
+set ignorecase		
+set smartcase
+
+" Mouse configuration 
+set mouse=a 
+set mousemodel=popup
+
+" Disable backups and swap files
+set nobackup
+set noswapfile
+
+" Minimal height of a window
+set winminheight=0
+
+" Disable line wrapping
+set nowrap
+
+" Window split resizing shortcuts
+map <C-J> <C-W>j<C-W>_
+map <C-K> <C-W>k<C-W>_
+
+" Re-highlight selected region after shifting left or right
+vnoremap < <gv
+vnoremap > >gv
+
+" Use Tab and Shift-Tab to shift left and right
+map <Tab> >0
+map <S-Tab> <0
+
+" Shift-Tab in insert mode left shifts the current line
+imap <S-Tab> <Esc> < i	
+
+" Surround selected code with '#if 0' and '#endif' - this only makes sense in
+" c/c++
+vmap sf <F5>"zdi#if 0<ENTER><C-R>z#endif<ENTER><ESC><F5>
+
+" Enable syntax highlighting by default
+syntax on
+
+" Fix backspace
+set backspace=indent,eol,start
+
+if version >= 600
+	filetype plugin indent on
+	filetype plugin on
+endif
+
+if version >= 703
+	set relativenumber
+
+	" Enable persistent undo
+	call system("mkdir ~/.vim/undo")
+	set undodir=~/.vim/.undo
+	set undofile
+else
+	set number
+endif
+
+" TODO 
+" Mark the ideal max text width
+" set colorcolumn=80
+
+" Vertical/Horizontal scroll off settings
+set scrolloff=3
+set sidescrolloff=7
+set sidescroll=1
+
+if has("gui_running")
+	set lines=35 columns=90
+	set guifont=Courier\ 10\ Pitch\ 11
+	" I don't know how to use spellcheck in terminal mode yet; leave it
+	" off.
+	set spell
+else
+	set background=dark
+endif
+
+" Color scheme selection
+" colorscheme solarized
+function! ToggleBackground()
+	if (g:solarized_style=="dark")
+		let g:solarized_style="light"
+		colorscheme solarized
+	else
+		let g:solarized_style="dark"
+		colorscheme solarized
+	endif
+endfunction
+command! Togbg call ToggleBackground()
+nnoremap <F5> :call ToggleBackground()<CR>
+inoremap <F5> <ESC>:call ToggleBackground()<CR>a
+vnoremap <F5> <ESC>:call ToggleBackground()<CR>
+
+autocmd Filetype html setlocal ts=2 sts=2 sw=2
+autocmd Filetype ruby setlocal ts=2 sts=2 sw=2
+autocmd Filetype javascript setlocal ts=4 sts=4 sw=4
+autocmd Filetype c setlocal ts=4 sts=4 sw=4 expandtab
+
+hi User1 cterm=NONE ctermbg=white ctermfg=darkblue guibg=grey guifg=red
+
+set statusline=
+set statusline +=%1*\ %n\ %*            "buffer number
+set statusline +=%1*%{&ff}%*            "file format
+set statusline +=%1*%y%*                "file type
+set statusline +=%1*\ %<%F%*            "full path
+set statusline +=%1*%m%*                "modified flag
+set statusline +=%1*%=%5l%*             "current line
+set statusline +=%1*/%L%*               "total lines
+set statusline +=%1*%4v\ %*             "virtual column number
+set statusline +=%1*0x%04B\ %*          "character under cursor
+set laststatus=2
+
+" Atheros specific data types
+syn keyword cType A_CHAR A_INT8 A_UINT8 A_UCHAR A_INT16 A_UINT16 A_INT32
+syn keyword cType A_UINT32 A_INT64 A_UINT64 A_BOOL ULONG A_ULONG A_ADDR
+
+if version >= 703
+	function! BuildCustomDataTypesFromTags()
+		let list = taglist('^.*')
+		let type_list = []
+
+		for item in list
+			let kind = item.kind
+			let name = item.name
+			if kind == 't' 
+				call add(type_list, "syntax keyword cType " . name)
+			endif
+		endfor
+		call writefile(type_list, ".custom-syntax.vim")
+	endfunction
+
+	function! LoadCustomDataTypesFromTags()
+		source .custom-syntax.vim
+	endfunction
+
+	nnoremap <F2> :call BuildCustomDataTypesFromTags()<CR>
+	inoremap <F2> <ESC>:call BuildCustomDataTypesFromTags()<CR>a
+	vnoremap <F2> <ESC>:call BuildCustomDataTypesFromTags()<CR>
+
+	nnoremap <F3> :call LoadCustomDataTypesFromTags()<CR>
+	inoremap <F3> <ESC>:call LoadCustomDataTypesFromTags()<CR>a
+	vnoremap <F3> <ESC>:call LoadCustomDataTypesFromTags()<CR>
+endif
+
