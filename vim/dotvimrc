@@ -12,6 +12,14 @@
 
 " Reload configuration from .vimrc
 map <F12> :source ~/.vimrc<CR>
+nmap ; :
+vmap ; :
+
+" reset cscope database whenever window is resized
+autocmd! VimResized
+autocmd VimResized * cscope reset
+map <F11> :cscope reset<CR><CR>
+
 
 " Toggle menu with Control-F1
 nnoremap <C-F1> :if &go=~#'m'<Bar>set go-=m<Bar>else<Bar>set go+=m<Bar>endif<CR>
@@ -74,8 +82,11 @@ set winminheight=0
 set nowrap
 
 " Window split resizing shortcuts
-map <C-J> <C-W>j<C-W>_
-map <C-K> <C-W>k<C-W>_
+nmap <A-J> <C-w>=
+map <C-j> <C-w>j
+map <C-k> <C-w>k
+map <C-h> <C-w>h
+map <C-l> <C-w>l
 
 " Re-highlight selected region after shifting left or right
 vnoremap < <gv
@@ -195,4 +206,3 @@ if version >= 703
 	inoremap <F3> <ESC>:call LoadCustomDataTypesFromTags()<CR>a
 	vnoremap <F3> <ESC>:call LoadCustomDataTypesFromTags()<CR>
 endif
-
