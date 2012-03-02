@@ -139,7 +139,7 @@ if has("gui_running")
 	" off.
 	set spell
 else
-	set background=dark
+	"set background=dark
 endif
 
 " Color scheme selection
