@@ -132,11 +132,6 @@ endif
 " Mark the ideal max text width
 " set colorcolumn=80
 
-" Vertical/Horizontal scroll off settings
-set scrolloff=3
-set sidescrolloff=7
-set sidescroll=1
-
 if has("gui_running")
 	set lines=35 columns=90
 	set guifont=Courier\ 10\ Pitch\ 11
@@ -232,3 +227,13 @@ function! CycleLineWidth()
 endfunction
 map <leader>c :call CycleLineWidth()<CR>
 
+
+" Vertical/Horizontal scroll off settings
+set scrolloff=5
+"set scroll=3
+set sidescrolloff=7
+set sidescroll=1
+
+"set background=dark
+"let g:solarized_termcolors=256
+"colorscheme solarized

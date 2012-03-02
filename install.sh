@@ -26,4 +26,10 @@ else
 	echo "$HOME/.bashrc already exists, skipping"
 fi
 
+if [ ! -e $HOME/.inputrc ]; then
+	ln -s $PWD/dotinputrc $HOME/.inputrc
+else
+	echo "$HOME/.inputrc already exists, skipping"
+fi
+
 
