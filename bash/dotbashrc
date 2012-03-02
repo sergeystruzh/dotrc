@@ -1,7 +1,8 @@
 
 # Perforce configuration
 export P4EDITOR=vim
-export P4CLIENT=jasonyo_avatar_00
+export P4PORT=perforce.qca.qualcomm.com:1666
+export P4USer=jasonyo
 
 # per-host custom built applications per
 export PATH=~/.$(hostname)-local/bin:$PATH
@@ -35,4 +36,8 @@ for c in ~/.ayj/bash/bash_completion.d/*; do
 done
 
 set_prompt
+
+if [ -e $HOME/.bash_local ]; then
+	source $HOME/.bash_local
+fi
 
