@@ -205,27 +205,29 @@ if version >= 703
 	vnoremap <F3> <ESC>:call LoadCustomDataTypesFromTags()<CR>
 endif
 
-set cc=
-highlight ColorColumn ctermbg=lightgrey guibg=lightgrey
-function! CycleLineWidth()
-	if (&cc==80)
-		set cc=90
-		echo "column width=90"
-	elseif (&cc==90)
-		set cc=100
-		echo "column width=100"
-	elseif (&cc==100)
-		set cc=110
-		echo "column width=110"
-	elseif (&cc==110)
-		set cc=
-		echo "no column width"
-	else
-		set cc=80
-		echo "column width=80"
-	endif
-endfunction
-map <leader>c :call CycleLineWidth()<CR>
+if version >= 703
+	set cc=
+	highlight ColorColumn ctermbg=lightgrey guibg=lightgrey
+	function! CycleLineWidth()
+		if (&cc==80)
+			set cc=90
+			echo "column width=90"
+		elseif (&cc==90)
+			set cc=100
+			echo "column width=100"
+		elseif (&cc==100)
+			set cc=110
+			echo "column width=110"
+		elseif (&cc==110)
+			set cc=
+			echo "no column width"
+		else
+			set cc=80
+			echo "column width=80"
+		endif
+	endfunction
+	map <leader>c :call CycleLineWidth()<CR>
+endif
 
 
 " Vertical/Horizontal scroll off settings
