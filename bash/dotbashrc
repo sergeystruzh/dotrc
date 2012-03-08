@@ -8,7 +8,14 @@ export P4USer=jasonyo
 export PATH=~/.$(hostname)-local/bin:$PATH
 
 unset LS_COLORS
-alias ls='ls --color=auto'
+
+ls --color=auto 2>/dev/null
+if [ "$?" -eq 0 ]; then
+	alias ls='ls --color=auto'
+else
+	alias ls='ls -G'
+fi
+
 alias psa='ps -u `whoami` -Hf'
 alias g='gvim'
 
