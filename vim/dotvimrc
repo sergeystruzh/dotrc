@@ -1,4 +1,4 @@
-" Jason Young <a.young.jason@gmail.com>
+	" Jason Young <a.young.jason@gmail.com>
 "
 " TODO update installation instructions
 " On Linux
@@ -19,6 +19,8 @@ vmap ; :
 autocmd! VimResized
 autocmd VimResized * cscope reset
 map <F11> :cscope reset<CR><CR>
+nmap < :bp<CR>
+nmap > :bn<CR>
 
 
 " Toggle menu with Control-F1
