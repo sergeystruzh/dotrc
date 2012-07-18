@@ -1,4 +1,5 @@
 	" Jason Young <a.young.jason@gmail.com>
+	" Sergey Struzh <sergeystruzh@gmail.com>
 "
 " TODO update installation instructions
 " On Linux
@@ -241,3 +242,7 @@ set sidescroll=1
 "set background=dark
 "let g:solarized_termcolors=256
 "colorscheme solarized
+
+" Tabstops and no automatic replacement of tabs by spaces
+set noexpandtab
+set tabstop=8
