@@ -4,18 +4,6 @@ export PATH=~/.$(hostname)-local/bin:$PATH
 
 unset LS_COLORS
 
-ls --color=auto 2>/dev/null
-if [ "$?" -eq 0 ]; then
-	alias ls='ls --color=auto'
-else
-	alias ls='ls -G'
-fi
-
-alias psa='ps -u `whoami` -Hf'
-alias g='gvim'
-
-# disable XON/XOFF flow control
-stty -ixon
 
 function bvtags () {
 	echo "	TAGS"
@@ -32,20 +20,29 @@ function set_prompt() {
 	export PS1='\[$green$bold\]\h\[$reset\]:\[$blue$bold\]\w\[$reset\]\n$ '
 }
 
-# hack to auto completion scripts
-# for c in ~/.ayj/bash/bash_completion.d/*; do
-#	source $c
-# done
+if [ "$?" -eq 0 ]; then
+	alias ls='ls --color=auto'
+else
+	alias ls='ls -G'
+fi
 
-set_prompt
+alias psa='ps -u `whoami` -Hf'
+alias g='gvim'
 
-# If this is an xterm set the title to user@host:dir
+
+# do some 'smart' stuff if this is an xterm or dome other 'smart' terminal s
+# e.g. set the title to user@host:dir, nicer prompt. w/o this selection 'dumb'
+# terminals (e.g. the one when doing rcp or scp) will get confused
 case "$TERM" in
 xterm*|rxvt*)
     PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
+	set_prompt
+	# disable XON/XOFF flow control
+	stty -ixon
+	ls --color=auto 2>/dev/null
     ;;
 *)
-    ;;
+	;;
 esac
 
 # some more ls aliases
