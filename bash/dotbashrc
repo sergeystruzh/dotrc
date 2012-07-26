@@ -1,6 +1,6 @@
 
 # per-host custom built applications per
-export PATH=~/.$(hostname)-local/bin:$PATH
+export PATH=~/.$(hostname)-local/bin:~/scr:$PATH
 
 unset LS_COLORS
 
