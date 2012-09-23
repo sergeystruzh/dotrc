@@ -1,0 +1,1 @@
+alias idea='IDEA_JDK=/usr/lib/jvm/jdk1.7.0_05/ /opt/idea-IC-117.798/bin/idea.sh'

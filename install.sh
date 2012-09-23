@@ -26,6 +26,12 @@ else
 	echo "$HOME/.bashrc already exists, skipping"
 fi
 
+if [ ! -e $HOME/.bash_aliases ]; then
+	ln -s $PWD/bash/dotbash_aliases $HOME/.bash_aliases
+else
+	echo "$HOME/.bash_aliases already exists, skipping"
+fi
+
 if [ ! -e $HOME/.inputrc ]; then
 	ln -s $PWD/dotinputrc $HOME/.inputrc
 else
