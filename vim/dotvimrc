@@ -245,4 +245,4 @@ set sidescroll=1
 
 " Tabstops and no automatic replacement of tabs by spaces
 set noexpandtab
-set tabstop=8
+set tabstop=4
