@@ -21,6 +21,9 @@
 " Happy cscoping,
 "
 " Jason Duell       jduell@alumni.princeton.edu     2002/3/7
+"
+" Sergey Struzh     sergeystruzh@gmail.com		    2013/1/12
+" 					(merged NerdTree related changes by Alan?)
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 
@@ -48,6 +51,82 @@ if has("cscope")
     " show msg when any other cscope db added
     set cscopeverbose  
 
+
+"
+" Added to use cscope with NERD_Tree by Alan 2010.05.14
+"
+
+" Save current directory
+let s:working_path = getcwd()
+
+" User Interface for cscope command
+command! -nargs=0 -bar CSMapForNERDTreeS call <SID>CS_Map_for_NERDTree_S()
+command! -nargs=0 -bar CSMapForNERDTreeG call <SID>CS_Map_for_NERDTree_G()
+command! -nargs=0 -bar CSMapForNERDTreeC call <SID>CS_Map_for_NERDTree_C()
+command! -nargs=0 -bar CSMapForNERDTreeT call <SID>CS_Map_for_NERDTree_T()
+command! -nargs=0 -bar CSMapForNERDTreeE call <SID>CS_Map_for_NERDTree_E()
+command! -nargs=0 -bar CSMapForNERDTreeF call <SID>CS_Map_for_NERDTree_F()
+command! -nargs=0 -bar CSMapForNERDTreeI call <SID>CS_Map_for_NERDTree_I()
+command! -nargs=0 -bar CSMapForNERDTreeD call <SID>CS_Map_for_NERDTree_D()
+
+" Function for cscope command
+function! <SID>CS_Map_for_NERDTree_S()
+   let s:cur_dir = getcwd()
+   exec "cd " . s:working_path
+   cs find s <cword>
+   exec "cd " . s:cur_dir
+endfunction
+
+function! <SID>CS_Map_for_NERDTree_G()
+   let s:cur_dir = getcwd()
+   exec "cd " . s:working_path
+   cs find g <cword>
+   exec "cd " . s:cur_dir
+endfunction
+
+function! <SID>CS_Map_for_NERDTree_C()
+   let s:cur_dir = getcwd()
+   exec "cd " . s:working_path
+   cs find c <cword>
+   exec "cd " . s:cur_dir
+endfunction
+
+function! <SID>CS_Map_for_NERDTree_T()
+   let s:cur_dir = getcwd()
+   exec "cd " . s:working_path
+   cs find t <cword>
+   exec "cd " . s:cur_dir
+endfunction
+
+function! <SID>CS_Map_for_NERDTree_E()
+   let s:cur_dir = getcwd()
+   exec "cd " . s:working_path
+   cs find e <cword>
+   exec "cd " . s:cur_dir
+endfunction
+
+function! <SID>CS_Map_for_NERDTree_F()
+   let s:cur_dir = getcwd()
+   exec "cd " . s:working_path
+   cs find f <cfile>
+   exec "cd " . s:cur_dir
+endfunction
+
+function! <SID>CS_Map_for_NERDTree_I()
+   let s:cur_dir = getcwd()
+   exec "cd " . s:working_path
+   cs find i <cfile>
+   exec "cd " . s:cur_dir
+endfunction
+
+function! <SID>CS_Map_for_NERDTree_D()
+   let s:cur_dir = getcwd()
+   exec "cd " . s:working_path
+   cs find d <cword>
+   exec "cd " . s:cur_dir
+endfunction
+
+" END - Added to use cscope with NERD_Tree by Alan 2010.05.14
 
     """"""""""""" My cscope/vim key mappings
     "
@@ -87,15 +166,29 @@ if has("cscope")
     " search will be displayed in the current window.  You can use CTRL-T to
     " go back to where you were before the search.  
     "
+    
+    "
+    " Remove original keymap by Alan 2010.05.14
+    "
+    " nmap <C-\>s :cs find s <C-R>=expand("<cword>")<CR><CR>	
+    " nmap <C-\>g :cs find g <C-R>=expand("<cword>")<CR><CR>	
+    " nmap <C-\>c :cs find c <C-R>=expand("<cword>")<CR><CR>	
+    " nmap <C-\>t :cs find t <C-R>=expand("<cword>")<CR><CR>	
+    " nmap <C-\>e :cs find e <C-R>=expand("<cword>")<CR><CR>	
+    " nmap <C-\>f :cs find f <C-R>=expand("<cfile>")<CR><CR>	
+    " nmap <C-\>i :cs find i <C-R>=expand("<cfile>")<CR><CR>	
+    " nmap <C-\>d :cs find d <C-R>=expand("<cword>")<CR><CR>	
 
-    nmap <C-\>s :cs find s <C-R>=expand("<cword>")<CR><CR>	
-    nmap <C-\>g :cs find g <C-R>=expand("<cword>")<CR><CR>	
-    nmap <C-\>c :cs find c <C-R>=expand("<cword>")<CR><CR>	
-    nmap <C-\>t :cs find t <C-R>=expand("<cword>")<CR><CR>	
-    nmap <C-\>e :cs find e <C-R>=expand("<cword>")<CR><CR>	
-    nmap <C-\>f :cs find f <C-R>=expand("<cfile>")<CR><CR>	
-    nmap <C-\>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
-    nmap <C-\>d :cs find d <C-R>=expand("<cword>")<CR><CR>	
+    " Added new key map to use cscope command with NERD_Tree by Alan 2010.05.14
+    nmap <C-\>s :CSMapForNERDTreeS<CR>
+    nmap <C-\>g :CSMapForNERDTreeG<CR>
+    nmap <C-\>c :CSMapForNERDTreeC<CR>
+    nmap <C-\>t :CSMapForNERDTreeT<CR>
+    nmap <C-\>e :CSMapForNERDTreeE<CR>
+    nmap <C-\>f :CSMapForNERDTreeF<CR>
+    nmap <C-\>i :CSMapForNERDTreeI<CR>
+    nmap <C-\>d :CSMapForNERDTreeD<CR>
+    " END - Added new key map to use cscope command with NERD_Tree by Alan 2010.05.14
 
 
     " Using 'CTRL-spacebar' (intepreted as CTRL-@ by vim) then a search type
@@ -106,6 +199,9 @@ if has("cscope")
     " can be simulated roughly via:
     "    nmap <C-@>s <C-W><C-S> :cs find s <C-R>=expand("<cword>")<CR><CR>	
 
+    "
+    " TODO ??? : Make new key map function by Alan 2010.05.14
+    "
     nmap <C-@>s :scs find s <C-R>=expand("<cword>")<CR><CR>	
     nmap <C-@>g :scs find g <C-R>=expand("<cword>")<CR><CR>	
     nmap <C-@>c :scs find c <C-R>=expand("<cword>")<CR><CR>	
@@ -122,14 +218,17 @@ if has("cscope")
     " (Note: you may wish to put a 'set splitright' in your .vimrc
     " if you prefer the new window on the right instead of the left
 
-    nmap <C-@><C-@>s :vert scs find s <C-R>=expand("<cword>")<CR><CR>
-    nmap <C-@><C-@>g :vert scs find g <C-R>=expand("<cword>")<CR><CR>
-    nmap <C-@><C-@>c :vert scs find c <C-R>=expand("<cword>")<CR><CR>
-    nmap <C-@><C-@>t :vert scs find t <C-R>=expand("<cword>")<CR><CR>
-    nmap <C-@><C-@>e :vert scs find e <C-R>=expand("<cword>")<CR><CR>
+    "
+    " TODO ??? : Make new key map function by Alan 2010.05.14
+    "
+    nmap <C-@><C-@>s :vert scs find s <C-R>=expand("<cword>")<CR><CR>	
+    nmap <C-@><C-@>g :vert scs find g <C-R>=expand("<cword>")<CR><CR>	
+    nmap <C-@><C-@>c :vert scs find c <C-R>=expand("<cword>")<CR><CR>	
+    nmap <C-@><C-@>t :vert scs find t <C-R>=expand("<cword>")<CR><CR>	
+    nmap <C-@><C-@>e :vert scs find e <C-R>=expand("<cword>")<CR><CR>	
     nmap <C-@><C-@>f :vert scs find f <C-R>=expand("<cfile>")<CR><CR>	
-    nmap <C-@><C-@>i :vert scs find i ^<C-R>=expand("<cfile>")<CR>$<CR>	
-    nmap <C-@><C-@>d :vert scs find d <C-R>=expand("<cword>")<CR><CR>
+    nmap <C-@><C-@>i :vert scs find i <C-R>=expand("<cfile>")<CR><CR>	
+    nmap <C-@><C-@>d :vert scs find d <C-R>=expand("<cword>")<CR><CR>	
 
 
     """"""""""""" key map timeouts
