@@ -1,0 +1,9 @@
+[user]
+	name = Sergey Struzh
+	email = sergeystruzh@gmail.com
+[color]
+	ui = auto
+	diff = auto
+[core]
+	editor = vim
+	pager = less -x 5,9

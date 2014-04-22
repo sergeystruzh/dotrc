@@ -38,4 +38,10 @@ else
 	echo "$HOME/.inputrc already exists, skipping"
 fi
 
+if [ ! -e $HOME/.gitconfig ]; then
+	ln -s $PWD/dotgitconfig $HOME/.gitconfig
+else
+	echo "$HOME/.gitconfig already exists, skipping"
+fi
+
 
