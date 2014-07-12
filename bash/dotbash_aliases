@@ -1,1 +1,2 @@
-alias idea='IDEA_JDK=/usr/lib/jvm/jdk1.7.0_05/ /opt/idea-IC-117.798/bin/idea.sh'
+alias idea='IDEA_JDK=/usr/lib/jvm/default-java/ /opt/idea/bin/idea.sh &'
+alias sts='/home/sergeys/Projects/springsource/sts-3.5.1.RELEASE/STS &'
