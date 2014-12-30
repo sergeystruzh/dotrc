@@ -12,6 +12,17 @@ function bvtags () {
 	cscope -Rb
 }                                      
 
+function termtitle () {
+	case "$TERM" in
+	xterm*|rxvt*)
+		echo -ne "\033]0;$1\007"
+	    ;;
+	*)
+		echo 'dumb terminal, sorry..'
+		;;
+	esac
+}
+
 function set_prompt() {
 	green=$(tput setaf 1)
 	blue=$(tput setaf 4)
@@ -35,7 +46,6 @@ alias g='gvim'
 # terminals (e.g. the one when doing rcp or scp) will get confused
 case "$TERM" in
 xterm*|rxvt*)
-    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
 	set_prompt
 	# disable XON/XOFF flow control
 	stty -ixon
