@@ -164,7 +164,7 @@ vnoremap <F5> <ESC>:call ToggleBackground()<CR>
 autocmd Filetype html setlocal ts=2 sts=2 sw=2
 autocmd Filetype ruby setlocal ts=2 sts=2 sw=2
 autocmd Filetype javascript setlocal ts=4 sts=4 sw=4
-autocmd Filetype c setlocal ts=4 sts=4 sw=4 expandtab
+autocmd Filetype c setlocal ts=4 sts=4 sw=4 noexpandtab
 
 hi User1 cterm=NONE ctermbg=white ctermfg=darkblue guibg=grey guifg=red
 
