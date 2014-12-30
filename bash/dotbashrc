@@ -1,9 +1,12 @@
-
 # per-host custom built applications per
 export PATH=~/.$(hostname)-local/bin:~/scr:$PATH
 
 unset LS_COLORS
 
+die() {
+	echo "$0: error - $1"
+	return
+}
 
 function bvtags () {
 	echo "	TAGS"
@@ -29,6 +32,14 @@ function set_prompt() {
 	bold=$(tput bold)
 	reset=$(tput sgr0)
 	export PS1='\[$green$bold\]\h\[$reset\]:\[$blue$bold\]\w\[$reset\]\n$ '
+}
+
+function set2compile_dvfkernel {
+	[ -d /opt/dspg ] || die "no DSPG toolchain installed in /opt/"
+	. /opt/dspg/master/environment-setup-armv5te-dspg-linux-gnueabi 
+	export CROSS_COMPILE=arm-dspg-linux-gnueabi-
+
+	termtitle "compile kernel here"
 }
 
 if [ "$?" -eq 0 ]; then
