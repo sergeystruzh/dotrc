@@ -5,43 +5,25 @@
 # When to use .bashrc vs .bash_profile?
 
 PWD=`pwd`
+__SCRIPT=${0##*/}
 
-# install vim stuff
-if [ ! -e $HOME/.vim ]; then
-	ln -s $PWD/vim $HOME/.vim
-else
-	echo "$HOME/.vim already exists, skipping"
-fi
+_echo () {
+	echo $__SCRIPT: $@
+}
 
-if [ ! -e $HOME/.vimrc ]; then
-	ln -s $PWD/vim/dotvimrc $HOME/.vimrc
-else
-	echo "$HOME/.vimrc already exists, skipping"
-fi
+for file in vim vimrc bashrc bash_aliases inputrc gitconfig
+do
+	if [ -L $HOME/.$file ]
+	then
+		_echo "$HOME/.$file already exists, skipping"
+	else
+		if [ -f $HOME/.$file ]
+		then
+			mv $HOME/.$file $HOME/.$file.orig
+			_echo "$HOME/.$file backed up to $HOME/.$file.orig"
+		fi
+		ln -s $PWD/dot$file $HOME/.$file
+	fi
+done
 
-# install bash stuff
-if [ ! -e $HOME/.bashrc ]; then
-	ln -s $PWD/bash/dotbashrc $HOME/.bashrc
-else
-	echo "$HOME/.bashrc already exists, skipping"
-fi
-
-if [ ! -e $HOME/.bash_aliases ]; then
-	ln -s $PWD/bash/dotbash_aliases $HOME/.bash_aliases
-else
-	echo "$HOME/.bash_aliases already exists, skipping"
-fi
-
-if [ ! -e $HOME/.inputrc ]; then
-	ln -s $PWD/dotinputrc $HOME/.inputrc
-else
-	echo "$HOME/.inputrc already exists, skipping"
-fi
-
-if [ ! -e $HOME/.gitconfig ]; then
-	ln -s $PWD/dotgitconfig $HOME/.gitconfig
-else
-	echo "$HOME/.gitconfig already exists, skipping"
-fi
-
-
+_echo SUCCESS
