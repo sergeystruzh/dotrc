@@ -35,11 +35,20 @@ function set_prompt() {
 }
 
 function set2compile_dvfkernel {
-	[ -d /opt/dspg ] || die "no DSPG toolchain installed in /opt/"
+	[ -d /opt/dspg ] || die "no DSPG toolchain installed in /opt/dspg"
 	. /opt/dspg/master/environment-setup-armv5te-dspg-linux-gnueabi 
 	export CROSS_COMPILE=arm-dspg-linux-gnueabi-
 
-	termtitle "compile kernel here"
+	termtitle "compile dvf kernel here"
+}
+
+function set2compile_rpikernel {
+	[ -d /opt/rpi-tools ] || die "no R-PI toolchain installed in /opt/rpi-tools"
+	export PATH=/opt/rpi-tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin:$PATH
+	export ARCH=arm
+	export CROSS_COMPILE=arm-linux-gnueabihf-
+
+	termtitle "compile R-PI kernel here"
 }
 
 if [ "$?" -eq 0 ]; then
