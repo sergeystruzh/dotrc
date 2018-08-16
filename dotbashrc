@@ -34,21 +34,14 @@ function set_prompt() {
 	export PS1='\[$green$bold\]\h\[$reset\]:\[$blue$bold\]\w\[$reset\]\n$ '
 }
 
-function set2compile_dvfkernel {
-	[ -d /opt/dspg ] || die "no DSPG toolchain installed in /opt/dspg"
-	. /opt/dspg/master/environment-setup-armv5te-dspg-linux-gnueabi 
-	export CROSS_COMPILE=arm-dspg-linux-gnueabi-
-
-	termtitle "compile dvf kernel here"
-}
-
-function set2compile_rpikernel {
-	[ -d /opt/rpi-tools ] || die "no R-PI toolchain installed in /opt/rpi-tools"
-	export PATH=/opt/rpi-tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin:$PATH
+function set2compile4rpi {
+	[ -d /opt/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/ ] \
+		|| die "no R-PI toolchain installed in /opt/"
+	export PATH=/opt/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin:$PATH
 	export ARCH=arm
 	export CROSS_COMPILE=arm-linux-gnueabihf-
 
-	termtitle "compile R-PI kernel here"
+	termtitle "compile for pi here"
 }
 
 if [ "$?" -eq 0 ]; then
