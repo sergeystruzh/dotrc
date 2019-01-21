@@ -1,2 +1,2 @@
 alias idea='IDEA_JDK=/usr/lib/jvm/default-java/ /opt/idea/bin/idea.sh &'
-alias sts='/home/sergeys/Projects/springsource/sts-3.5.1.RELEASE/STS &'
+alias dps='docker ps --format "{{.ID}}: {{.Command}}\t{{.Status}}\t{{.Names}}"'
