@@ -58,7 +58,7 @@ alias g='gvim'
 # e.g. set the title to user@host:dir, nicer prompt. w/o this selection 'dumb'
 # terminals (e.g. the one when doing rcp or scp) will get confused
 case "$TERM" in
-xterm*|rxvt*)
+xterm*|rxvt*|screen*)
 	set_prompt
 	# disable XON/XOFF flow control
 	stty -ixon
