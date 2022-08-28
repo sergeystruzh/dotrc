@@ -7,7 +7,7 @@ _echo () {
    	echo $__SCRIPT: $@
 }
 
-for file in vim vimrc bashrc bash_aliases inputrc gitconfig
+for file in vim vimrc bashrc bash_aliases inputrc gitconfig dottmux.conf
 do
 	if [ -L $HOME/.$file ]
 	then

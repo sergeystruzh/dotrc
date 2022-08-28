@@ -11,7 +11,7 @@ _echo () {
 	echo $__SCRIPT: $@
 }
 
-for file in vim vimrc bashrc bash_aliases inputrc gitconfig
+for file in vim vimrc bashrc bash_aliases inputrc gitconfig tmux.conf
 do
 	if [ -L $HOME/.$file ]
 	then
@@ -22,6 +22,7 @@ do
 			mv $HOME/.$file $HOME/.$file.orig
 			_echo "$HOME/.$file backed up to $HOME/.$file.orig"
 		fi
+		_echo "installing $file.."
 		ln -s $PWD/dot$file $HOME/.$file
 	fi
 done
