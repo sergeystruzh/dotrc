@@ -34,16 +34,6 @@ function set_prompt() {
 	export PS1='\[$green$bold\]\h\[$reset\]:\[$blue$bold\]\w\[$reset\]\n$ '
 }
 
-function set2compile4rpi {
-	[ -d /opt/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/ ] \
-		|| die "no R-PI toolchain installed in /opt/"
-	export PATH=/opt/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin:$PATH
-	export ARCH=arm
-	export CROSS_COMPILE=arm-linux-gnueabihf-
-
-	termtitle "compile for pi here"
-}
-
 if [ "$?" -eq 0 ]; then
 	alias ls='ls --color=auto'
 else
