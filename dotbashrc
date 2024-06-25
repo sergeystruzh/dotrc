@@ -1,5 +1,5 @@
 # per-host custom built applications
-export PATH=~/.$(hostname)-local/bin:$PATH
+export PATH=~/.$(hostname)-local/bin:~/.local/bin/:$PATH
 
 unset LS_COLORS
 
@@ -17,7 +17,7 @@ function bvtags () {
 
 function termtitle () {
 	case "$TERM" in
-	xterm*|rxvt*)
+	xterm*|rxvt*|tmux*)
 		echo -ne "\033]0;$1\007"
 	    ;;
 	*)
@@ -48,11 +48,12 @@ alias g='gvim'
 # e.g. set the title to user@host:dir, nicer prompt. w/o this selection 'dumb'
 # terminals (e.g. the one when doing rcp or scp) will get confused
 case "$TERM" in
-xterm*|rxvt*|screen*)
-	set_prompt
+xterm*|rxvt*|screen*|tmux*)
+	# customize prompt (unless we're within a container box)
+	[ "$container" ] || set_prompt
 	# disable XON/XOFF flow control
 	stty -ixon
-	ls --color=auto 2>/dev/null
+	[ "$TERM_PROGRAM" = "vscode" ] || ls --color=auto 2>/dev/null
     ;;
 *)
 	;;
