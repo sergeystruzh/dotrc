@@ -1,14 +1,20 @@
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-" File Name:      trinity.vim
-" Abstract:       A (G)VIM plugin which build the trinity of Source Explorer,  
-"                 TagList and NERD tree to be an IDE for software development.
-" Author:         CHE Wenlong <chewenlong AT buaa.edu.cn>
-" Version:        1.4
-" Last Change:    March 3, 2009
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                                                                              "
+" File Name:   Trinity                                                         "
+" Abstract:    A (G)Vim plugin for building 'Source Explorer', 'Taglist' and   "
+"              'NERD tree' into an IDE.                                        "
+" Authors:     Wenlong Che <wenlong.che@gmail.com>                             "
+" Homepage:    https://www.vim.org/scripts/script.php?script_id=2347           "
+" GitHub:      https://www.github.com/wesleyche/Trinity                        "
+" Version:     2.2                                                             "
+" Last Change: June 18th, 2018                                                 "
+" Licence:     This program is free software; you can redistribute it and / or "
+"              modify it under the terms of the GNU General Public License as  "
+"              published by the Free Software Foundation; either version 2, or "
+"              any later version.                                              "
+"                                                                              "
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " Avoid reloading {{{
 
@@ -25,12 +31,12 @@ set cpoptions&vim
 
 " VIM version control {{{
 
-" The VIM version control for running the Source Explorer
+" The VIM version control for running the Trinity
 
 if v:version < 700
     " Tell the user what has happened
     echohl ErrorMsg
-    echo "Trinity: Require VIM 7.0 or above for running the Trinity."
+        echo "Require VIM 7.0 or above for running the Trinity."
     echohl None
     finish
 endif
@@ -41,23 +47,29 @@ endif
 
 " User interface for switching all the three plugins
 
-command! -nargs=0 -bar TrinityToggleAll 
+command! -nargs=0 -bar TrinityToggleAll
     \ call <SID>Trinity_Toggle()
 
 " User interface for switching the TagList
 
-command! -nargs=0 -bar TrinityToggleTagList 
+command! -nargs=0 -bar TrinityToggleTagList
     \ call <SID>Trinity_ToggleTagList()
 
 " User interface for switching the Source Explorer
 
-command! -nargs=0 -bar TrinityToggleSourceExplorer 
+command! -nargs=0 -bar TrinityToggleSourceExplorer
     \ call <SID>Trinity_ToggleSourceExplorer()
 
 " User interface for switching the NERD tree
 
-command! -nargs=0 -bar TrinityToggleNERDTree 
+command! -nargs=0 -bar TrinityToggleNERDTree
     \ call <SID>Trinity_ToggleNERDTree()
+
+" User interface for updating window positions
+" e.g. open/close Quickfix
+
+command! -nargs=0 -bar TrinityUpdateWindow
+    \ call <SID>Trinity_UpdateWindow()
 
 " }}}
 
@@ -66,16 +78,16 @@ command! -nargs=0 -bar TrinityToggleNERDTree
 let s:Trinity_switch         = 0
 let s:Trinity_tabPage        = 0
 let s:Trinity_isDebug        = 0
-let s:Trinity_logPath        = "./trinity.log"
+let s:Trinity_logPath        = '~/trinity.log'
 
 let s:tag_list_switch        = 0
 let s:tag_list_title         = "__Tag_List__"
 
-let s:source_explorer_switch = 0
-let s:source_explorer_title  = "Source_Explorer"
-
 let s:nerd_tree_switch       = 0
 let s:nerd_tree_title        = "_NERD_tree_"
+
+let s:source_explorer_switch = 0
+let s:source_explorer_title  = "Source_Explorer"
 
 " }}}
 
@@ -88,7 +100,7 @@ function! <SID>Trinity_InitTagList()
     " Split to the right side of the screen
     let g:Tlist_Use_Left_Window = 1
     " Set the window width
-    let g:Tlist_WinWidth = 24
+    let g:Tlist_WinWidth = 40
     " Sort by the order
     let g:Tlist_Sort_Type = "order"
     " Do not display the help info
@@ -111,8 +123,16 @@ endfunction " }}}
 function! <SID>Trinity_InitSourceExplorer()
 
     " // Set the height of Source Explorer window                                  "
-    let g:SrcExpl_winHeight = 8
-    " // Set 100 ms for refreshing the Source Explorer                             "
+    if has("unix")
+        if has('gui_running')
+            let g:SrcExpl_winHeight = 10
+        else
+            let g:SrcExpl_winHeight = 11
+        endif
+    else
+        let g:SrcExpl_winHeight = 8
+    endif
+    " // Set 1 ms for refreshing the Source Explorer                               "
     let g:SrcExpl_refreshTime = 1
     " // Set "Enter" key to jump into the exact definition context                 "
     let g:SrcExpl_jumpKey = "<ENTER>"
@@ -122,21 +142,39 @@ function! <SID>Trinity_InitSourceExplorer()
     " // are using buffers. And you need add their bufname into the list below     "
     " // according to the command ":buffers!"                                      "
     let g:SrcExpl_pluginList = [
-        \ "__Tag_List__",
-        \ "_NERD_tree_",
-        \ "Source_Explorer"
+        \ s:tag_list_title,
+        \ s:nerd_tree_title,
+        \ s:source_explorer_title
     \ ]
+    " // The color schemes used by Source Explorer. There are five color schemes   "
+    " // supported for now - Red, Cyan, Green, Yellow and Magenta. Source Explorer "
+    " // will pick up one of them randomly when initialization.                    "
+     let g:SrcExpl_colorSchemeList = [
+             \ "Red",
+             \ "Cyan",
+             \ "Green",
+             \ "Yellow",
+             \ "Magenta"
+     \ ]
     " // Enable/Disable the local definition searching, and note that this is not  "
     " // guaranteed to work, the Source Explorer doesn't check the syntax for now. "
     " // It only searches for a match with the keyword according to command 'gd'   "
     let g:SrcExpl_searchLocalDef = 1
-    " // Let the Source Explorer update the tags file when opening                 "
+    " // Workaround for Vim bug @https://goo.gl/TLPK4K as any plugins using        "
+    " // autocmd for BufReadPre might have conflicts with Source Explorer. e.g.    "
+    " // YCM, Syntastic etc.                                                       "
+    let g:SrcExpl_nestedAutoCmd = 1
+    " // Do not let the Source Explorer update the tags file when opening          "
     let g:SrcExpl_isUpdateTags = 0
     " // Use program 'ctags' with argument '--sort=foldcase -R' to create or       "
     " // update a tags file                                                        "
-    let g:SrcExpl_updateTagsCmd = "ctags --sort=foldcase -R ."
-    " // Set "<F6>" key for updating the tags file artificially                   "
-    let g:SrcExpl_updateTagsKey = "<F6>"
+    " let g:SrcExpl_updateTagsCmd = "ctags --sort=foldcase -R ."
+    " // Set "<F12>" key for updating the tags file artificially                   "
+    " let g:SrcExpl_updateTagsKey = "<F12>"
+    " // Set "<F3>" key for displaying the previous definition in the jump list    "
+    let g:SrcExpl_prevDefKey = "<F3>"
+    " // Set "<F4>" key for displaying the next definition in the jump list        "
+    let g:SrcExpl_nextDefKey = "<F4>"
 
 endfunction " }}}
 
@@ -159,7 +197,7 @@ endfunction " }}}
 
 " Trinity_Debug() {{{
 
-" Log the supplied debug information along with the time 
+" Log the supplied debug information along with the time
 
 function! <SID>Trinity_Debug(log)
 
@@ -177,44 +215,50 @@ function! <SID>Trinity_Debug(log)
 
 endfunction " }}}
 
-" Trinity_GetEditWinNR() {{{
+" Trinity_GetEditWin() {{{
 
-" Get the edit winindow NR
+" Get the edit window number
 
-function! <SID>Trinity_GetEditWinNR()
+function! <SID>Trinity_GetEditWin()
 
     let l:i = 1
     let l:j = 1
 
+    let l:srcexplWin = 0
     let l:pluginList = [
-            \ s:tag_list_title, 
-            \ s:source_explorer_title, 
+            \ s:tag_list_title,
+            \ s:source_explorer_title,
             \ s:nerd_tree_title
         \]
 
-    while 1
+    try
+        let l:srcexplWin = g:SrcExpl_GetWin()
+    catch
+    finally
+        while 1
+            " compatible for Named Buffer Version and Preview Window Version
+            for item in l:pluginList
+                if (bufname(winbufnr(l:i)) ==# item)
+                \ || (l:srcexplWin == 0 && getwinvar(l:i, '&previewwindow'))
+                \ || (l:srcexplWin == l:i)
+                    break
+                else
+                    let l:j += 1
+                endif
+            endfor
 
-        for item in l:pluginList
-            if bufname(winbufnr(l:i)) ==# item
-                \ || getwinvar(l:i, '&previewwindow')
-                break
+            if l:j >= len(l:pluginList)
+                return l:i
             else
-                let l:j += 1
+                let l:i += 1
+                let l:j = 0
             endif
-        endfor
 
-        if j >= len(l:pluginList)
-            return l:i
-        else
-            let l:i += 1
-            let l:j = 0
-        endif
-
-        if l:i > winnr("$")
-            return -1
-        endif
-
-    endwhile
+            if l:i > winnr("$")
+                return -1
+            endif
+        endwhile
+    endtry
 
 endfunction " }}}
 
@@ -224,48 +268,41 @@ endfunction " }}}
 
 function! <SID>Trinity_UpdateWindow()
 
-    let l:i       = 1
-    let l:rtn = -1
-
-    let l:tag_list_winnr = 0
     let l:source_explorer_winnr = 0
-    let l:nerd_tree_winnr = 0
-
-    while 1
-
-        if bufname(winbufnr(l:i)) ==# s:tag_list_title
-            let l:tag_list_winnr = l:i
+    try
+        " For Named Buffer Version
+        let l:source_explorer_winnr = g:SrcExpl_GetWin()
+    catch
+    finally
+        " For Preview Window Version
+        if l:source_explorer_winnr == 0
+            let l:i = 1
+            while 1
+                if bufname(winbufnr(l:i)) ==# s:source_explorer_title
+                        \ || getwinvar(l:i, '&previewwindow')
+                    let l:source_explorer_winnr = l:i
+                    break
+                endif
+                let l:i += 1
+                if l:i > winnr("$")
+                    break
+                endif
+            endwhile
         endif
 
-        if bufname(winbufnr(l:i)) ==# s:source_explorer_title 
-                \ || getwinvar(l:i, '&previewwindow')
-            let l:source_explorer_winnr = l:i
+        if l:source_explorer_winnr > 0
+            silent! exe l:source_explorer_winnr . "wincmd " . "w"
+            silent! exe "wincmd " . "J"
+            silent! exe g:SrcExpl_winHeight . " wincmd " . "_"
         endif
 
-        if bufname(winbufnr(l:i)) ==# s:nerd_tree_title
-            let l:nerd_tree_winnr = l:i
+        let l:rtn = <SID>Trinity_GetEditWin()
+        if l:rtn < 0
+            return
         endif
 
-        let l:i += 1
-        if l:i > winnr("$")
-            break
-        endif
-
-    endwhile
-
-    if l:source_explorer_winnr > 0
-        silent! exe l:source_explorer_winnr . "wincmd " . "w"
-        silent! exe "wincmd " . "J"
-        silent! exe g:SrcExpl_winHeight . " wincmd " . "_"
-    endif
-
-    let l:rtn = <SID>Trinity_GetEditWinNR()
-
-    if l:rtn < 0
-        return
-    endif
-
-    silent! exe l:rtn . "wincmd w"
+        silent! exe l:rtn . "wincmd w"
+    endtry
 
 endfunction " }}}
 
@@ -298,12 +335,14 @@ function! <SID>Trinity_ToggleNERDTree()
     if s:Trinity_tabPage == 0
         let s:Trinity_tabPage = tabpagenr()
     endif
+
     if s:Trinity_tabPage != tabpagenr()
         echohl ErrorMsg
-        echo "Trinity: Not support multiple tab pages for now."
+            echo "Trinity: Not support multiple tab pages for now."
         echohl None
         return
     endif
+
     call <SID>Trinity_UpdateStatus()
     if s:Trinity_switch == 0
         if s:nerd_tree_switch == 0
@@ -342,7 +381,7 @@ function! <SID>Trinity_ToggleSourceExplorer()
     endif
     if s:Trinity_tabPage != tabpagenr()
         echohl ErrorMsg
-        echo "Trinity: Not support multiple tab pages for now."
+            echo "Trinity: Not support multiple tab pages for now."
         echohl None
         return
     endif
@@ -384,7 +423,7 @@ function! <SID>Trinity_ToggleTagList()
     endif
     if s:Trinity_tabPage != tabpagenr()
         echohl ErrorMsg
-        echo "Trinity: Not support multiple tab pages for now."
+            echo "Trinity: Not support multiple tab pages for now."
         echohl None
         return
     endif
@@ -425,12 +464,14 @@ function! <SID>Trinity_Toggle()
     if s:Trinity_tabPage == 0
         let s:Trinity_tabPage = tabpagenr()
     endif
+
     if s:Trinity_tabPage != tabpagenr()
         echohl ErrorMsg
-        echo "Trinity: Not support multiple tab pages for now."
+            echo "Trinity: Not support multiple tab pages for now."
         echohl None
         return
     endif
+
     if s:Trinity_switch == 1
         if s:tag_list_switch == 1
             TlistClose
